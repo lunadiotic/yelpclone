@@ -1,20 +1,30 @@
 <% layout('layouts/app') %>
 
-<h1>Add Place</h1>
-<form action="/places" method="POST">
-    <div>
-        <label for="title">Title</label>
-        <input type="text" name="place[title]" id="title">
+<div class="row">
+    <h1 class="text-center">Add Place</h1>
+    <div class="col-6 offset-3">
+        <form action="/places" method="POST">
+            <div class="mb-3">
+                <label for="title" class="form-label">Title</label>
+                <input type="text" name="place[title]" id="title" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label for="location" class="form-label">Location</label>
+                <input type="text" name="place[location]" id="location" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea name="place[description]" id="description" class="form-control"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="price" class="form-label">Price</label>
+                <input type="text" name="place[price]" id="price" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label for="image" class="form-label">Image Url</label>
+                <input type="text" name="place[image]" id="image" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
     </div>
-    <div>
-        <label for="location">Location</label>
-        <input type="text" name="place[location]" id="location">
-    </div>
-    <div>
-        <label for="price">Price</label>
-        <input type="text" name="place[price]" id="price">
-    </div>
-    <button type="submit">Save
-        
-    </button>
-</form>
+</div>
