@@ -1,4 +1,5 @@
 const express = require('express');
+const methodOverride = require('method-override');
 const mongoose = require('mongoose');
 const path = require('path');
 const app = express();
@@ -20,6 +21,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 // middleware
 app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride('_method'));
 
 
 
@@ -46,6 +48,16 @@ app.post('/places', async (req, res) => {
 app.get('/places/:id', async (req, res) => {
 	const place = await Place.findById(req.params.id);
 	res.render('places/show', { place });
+})
+
+app.get('/places/:id/edit', async (req, res) => {
+	const place = await Place.findById(req.params.id);
+	res.render('places/edit', { place });
+})
+
+app.put('/places/:id', async (req, res) => {
+	await Place.findByIdAndUpdate(req.params.id, { ...req.body.place });
+	res.redirect('/places');
 })
 
 
