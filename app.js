@@ -18,6 +18,9 @@ mongoose.connect('mongodb://127.0.0.1/yelp_clone')
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+// middleware
+app.use(express.urlencoded({ extended: true }));
+
 
 
 app.get('/', (req, res) => {
@@ -30,10 +33,22 @@ app.get('/places', async (req, res) => {
 	res.render('places/index', { places });
 })
 
+app.get('/places/create', (req, res) => {
+	res.render('places/create');
+})
+
+app.post('/places', async (req, res) => {
+	const place = new Place(req.body.place);
+	await place.save();
+	res.redirect('/places');
+})
+
 app.get('/places/:id', async (req, res) => {
 	const place = await Place.findById(req.params.id);
 	res.render('places/show', { place });
 })
+
+
 
 // app.get('/seed/places', async (req, res) => {
 // 	const place = new Place({
