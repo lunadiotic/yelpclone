@@ -3,28 +3,80 @@
 <div class="row">
     <h1 class="text-center">Update Place</h1>
     <div class="col-6 offset-3">
-        <form action="/places/<%= place._id %>?_method=PUT" method="POST">
+        <form action="/places/<%= place._id %>?_method=PUT" method="POST" class="validated-form" novalidate>
             <div class="mb-3">
                 <label for="title" class="form-label">Title</label>
-                <input type="text" name="place[title]" id="title" class="form-control" value="<%= place.title %>">
+                <input type="text" name="place[title]" id="title" class="form-control" value="<%= place.title %>" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+                <div class="invalid-feedback">
+                    Please fill out this field.
+                </div>
             </div>
             <div class="mb-3">
                 <label for="location" class="form-label">Location</label>
-                <input type="text" name="place[location]" id="location" class="form-control" value="<%= place.location %>">
+                <input type="text" name="place[location]" id="location" class="form-control" value="<%= place.location %>" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+                <div class="invalid-feedback">
+                    Please fill out this field.
+                </div>
             </div>
             <div class="mb-3">
                 <label for="description" class="form-label">Description</label>
-                <textarea name="place[description]" id="description" class="form-control"><%= place.description %></textarea>
+                <textarea name="place[description]" id="description" class="form-control" required><%= place.description %></textarea>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+                <div class="invalid-feedback">
+                    Please fill out this field.
+                </div>
             </div>
             <div class="mb-3">
                 <label for="price" class="form-label">Price</label>
-                <input type="text" name="place[price]" id="price" class="form-control" value="<%= place.price %>">
+                <input type="text" name="place[price]" id="price" class="form-control" value="<%= place.price %>" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+                <div class="invalid-feedback">
+                    Please fill out this field.
+                </div>
             </div>
             <div class="mb-3">
                 <label for="image" class="form-label">Image Url</label>
-                <input type="text" name="place[image]" id="image" class="form-control" value="<%= place.image %>">
+                <input type="text" name="place[image]" id="image" class="form-control" value="<%= place.image %>" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+                <div class="invalid-feedback">
+                    Please fill out this field.
+                </div>
             </div>
             <button type="submit" class="btn btn-primary">Save</button>
         </form>
     </div>
 </div>
+
+
+<script>
+    (() => {
+        'use strict'
+      
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        const forms = document.querySelectorAll('.validated-form')
+      
+        // Loop over them and prevent submission
+        Array.from(forms).forEach(form => {
+          form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+              event.preventDefault()
+              event.stopPropagation()
+            }
+      
+            form.classList.add('was-validated')
+          }, false)
+        })
+      })()
+</script>
