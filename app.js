@@ -60,6 +60,11 @@ app.put('/places/:id', async (req, res) => {
 	res.redirect('/places');
 })
 
+app.delete('/places/:id', async (req, res) => {
+	await Place.findByIdAndDelete(req.params.id);
+	res.redirect('/places');
+})
+
 
 
 // app.get('/seed/places', async (req, res) => {
