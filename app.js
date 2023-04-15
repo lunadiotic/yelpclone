@@ -11,6 +11,9 @@ const app = express();
 // models
 const Place = require('./models/place');
 
+// schemas 
+const { placeSchema } = require('./schemas/place');
+
 // connect to mongodb
 mongoose.connect('mongodb://127.0.0.1/yelp_clone')
 	.then((result) => {
@@ -28,6 +31,16 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
+const validatePlace = (req, res, next) => {
+	const { error } = placeSchema.validate(req.body);
+	if (error) {
+		const msg = error.details.map(el => el.message).join(',')
+		return next(new ExpressError(msg, 400))
+	} else {
+		next();
+	}
+}
+
 
 
 app.get('/', (req, res) => {
@@ -44,24 +57,7 @@ app.get('/places/create', (req, res) => {
 	res.render('places/create');
 })
 
-app.post('/places', wrapAsync(async (req, res, next) => {
-	// if (!req.body.place)
-	// 	return next(new ExpressError('Please provide a place', 400))
-	const placeSchema = Joi.object({
-		place: Joi.object({
-			title: Joi.string().required(),
-			description: Joi.string().required(),
-			location: Joi.string().required(),
-			price: Joi.number().min(0).required()
-		}).required()
-	})
-	const { error } = placeSchema.validate(req.body);
-
-	if (error) {
-		const msg = error.details.map(el => el.message).join(',')
-		return next(new ExpressError(msg, 400))
-	}
-
+app.post('/places', validatePlace, wrapAsync(async (req, res, next) => {
 	const place = new Place(req.body.place);
 	await place.save();
 	res.redirect('/places');
@@ -77,7 +73,7 @@ app.get('/places/:id/edit', wrapAsync(async (req, res) => {
 	res.render('places/edit', { place });
 }))
 
-app.put('/places/:id', wrapAsync(async (req, res) => {
+app.put('/places/:id', validatePlace, wrapAsync(async (req, res) => {
 	await Place.findByIdAndUpdate(req.params.id, { ...req.body.place });
 	res.redirect('/places');
 }))
