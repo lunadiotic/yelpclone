@@ -10,6 +10,7 @@ const app = express();
 
 // models
 const Place = require('./models/place');
+const Review = require('./models/review');
 
 // schemas 
 const { placeSchema } = require('./schemas/place');
@@ -82,6 +83,15 @@ app.delete('/places/:id', async (req, res) => {
 	await Place.findByIdAndDelete(req.params.id);
 	res.redirect('/places');
 })
+
+app.post('/places/:id/reviews', wrapAsync(async (req, res) => {
+	const review = new Review(req.body.review);
+	const place = await Place.findById(req.params.id);
+	place.reviews.push(review);
+	await review.save();
+	await place.save();
+	res.redirect(`/places/${req.params.id}`);
+}))
 
 app.all('*', (req, res, next) => {
 	next(new ExpressError('Page not found', 404));
