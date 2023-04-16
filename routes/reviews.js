@@ -4,6 +4,7 @@ const ExpressError = require('../utils/ExpressError');
 const Place = require('../models/place');
 const Review = require('../models/review');
 const { reviewSchema } = require('../schemas/review');
+const isValidObjectId = require('../middleware/isValidObjectId');
 const router = express.Router({ mergeParams: true });
 
 const validateReview = (req, res, next) => {
@@ -16,7 +17,7 @@ const validateReview = (req, res, next) => {
     }
 }
 
-router.post('/', validateReview, wrapAsync(async (req, res) => {
+router.post('/', isValidObjectId('/places'), validateReview, wrapAsync(async (req, res) => {
     const { place_id } = req.params;
     const review = new Review(req.body.review);
     const place = await Place.findById(place_id);
@@ -27,7 +28,7 @@ router.post('/', validateReview, wrapAsync(async (req, res) => {
     res.redirect(`/places/${place_id}`);
 }))
 
-router.delete('/:review_id', wrapAsync(async (req, res) => {
+router.delete('/:review_id', isValidObjectId('/places'), wrapAsync(async (req, res) => {
     const { place_id, review_id } = req.params;
     await Place.findByIdAndUpdate(place_id, { $pull: { reviews: review_id } });
     await Review.findByIdAndDelete(review_id);

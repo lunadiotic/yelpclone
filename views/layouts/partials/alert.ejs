@@ -4,3 +4,10 @@
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 <% } %>
+
+<% if(error_msg && error_msg.length ) {%>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <%= error_msg %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+<% } %>
