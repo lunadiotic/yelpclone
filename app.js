@@ -7,6 +7,9 @@ const methodOverride = require('method-override');
 const mongoose = require('mongoose');
 const path = require('path');
 const app = express();
+const passport = require('passport')
+const LocalStrategy = require('passport-local')
+const User = require('./models/user')
 
 // connect to mongodb
 mongoose.connect('mongodb://127.0.0.1/yelp_clone')
@@ -42,10 +45,24 @@ app.use((req, res, next) => {
 	res.locals.error = req.flash('error');
 	next();
 })
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()))
+passport.serializeUser(User.serializeUser())
+passport.deserializeUser(User.deserializeUser())
 
 app.get('/', (req, res) => {
 	res.render('home');
 });
+
+app.get('/seeds/user', async (req, res) => {
+	const user = new User({
+		email: 'aim@mail.com',
+		username: 'aim'
+	})
+	const newUser = await User.register(user, 'password')
+	res.send(newUser);
+})
 
 // places routes
 app.use('/places', require('./routes/places'));
