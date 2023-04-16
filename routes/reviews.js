@@ -4,7 +4,7 @@ const ExpressError = require('../utils/ExpressError');
 const Place = require('../models/place');
 const Review = require('../models/review');
 const { reviewSchema } = require('../schemas/review');
-const isValidObjectId = require('../middleware/isValidObjectId');
+const isValidObjectId = require('../middlewares/isValidObjectId');
 const router = express.Router({ mergeParams: true });
 
 const validateReview = (req, res, next) => {
