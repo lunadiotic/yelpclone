@@ -49,6 +49,7 @@ router.put('/:id', validatePlace, wrapAsync(async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
     await Place.findByIdAndDelete(req.params.id);
+    req.flash('success_msg', 'Place Deleted!');
     res.redirect('/places');
 })
 
