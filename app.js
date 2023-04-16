@@ -65,6 +65,7 @@ app.get('/seeds/user', async (req, res) => {
 })
 
 // places routes
+app.use('/', require('./routes/user'))
 app.use('/places', require('./routes/places'));
 app.use('/places/:place_id/reviews', require('./routes/reviews'));
 
