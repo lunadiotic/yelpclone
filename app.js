@@ -1,5 +1,6 @@
 const ejsMate = require('ejs-mate')
 const express = require('express');
+const session = require('express-session');
 const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
 const mongoose = require('mongoose');
@@ -23,6 +24,16 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({
+	secret: 'this-is-a-secret-key',
+	resave: false,
+	saveUninitialized: false,
+	cookie: {
+		httpOnly: true,
+		expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+		maxAge: 1000 * 60 * 60 * 24 * 7
+	}
+}))
 
 app.get('/', (req, res) => {
 	res.render('home');
