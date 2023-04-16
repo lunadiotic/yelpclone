@@ -3,16 +3,8 @@ const express = require('express');
 const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
 const mongoose = require('mongoose');
-const wrapAsync = require('./utils/wrapAsync');
 const path = require('path');
 const app = express();
-
-// models
-const Place = require('./models/place');
-const Review = require('./models/review');
-
-// schemas 
-const { reviewSchema } = require('./schemas/review');
 
 // connect to mongodb
 mongoose.connect('mongodb://127.0.0.1/yelp_clone')
@@ -31,41 +23,14 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
-
-
-const validateReview = (req, res, next) => {
-	const { error } = reviewSchema.validate(req.body);
-	if (error) {
-		const msg = error.details.map(el => el.message).join(',')
-		return next(new ExpressError(msg, 400))
-	} else {
-		next();
-	}
-}
-
-
 app.get('/', (req, res) => {
 	res.render('home');
 });
 
 // places routes
 app.use('/places', require('./routes/places'));
+app.use('/places/:place_id/reviews', require('./routes/reviews'));
 
-app.post('/places/:id/reviews', validateReview, wrapAsync(async (req, res) => {
-	const review = new Review(req.body.review);
-	const place = await Place.findById(req.params.id);
-	place.reviews.push(review);
-	await review.save();
-	await place.save();
-	res.redirect(`/places/${req.params.id}`);
-}))
-
-app.delete('/places/:place_id/reviews/:review_id', wrapAsync(async (req, res) => {
-	const { placeId, reviewId } = req.params;
-	await Place.findByIdAndUpdate(placeId, { $pull: { reviews: reviewId } });
-	await Review.findByIdAndDelete(reviewId);
-	res.redirect(`/places/${placeId}`);
-}))
 
 app.all('*', (req, res, next) => {
 	next(new ExpressError('Page not found', 404));
