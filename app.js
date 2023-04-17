@@ -39,30 +39,24 @@ app.use(session({
 	}
 }))
 app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(new LocalStrategy(User.authenticate()))
+passport.serializeUser(User.serializeUser())
+passport.deserializeUser(User.deserializeUser())
+
 app.use((req, res, next) => {
+	res.locals.currentUser = req.user;
 	res.locals.success_msg = req.flash('success_msg');
 	res.locals.error_msg = req.flash('error_msg');
 	res.locals.error = req.flash('error');
 	next();
 })
-app.use(passport.initialize());
-app.use(passport.session());
-passport.use(new LocalStrategy(User.authenticate()))
-passport.serializeUser(User.serializeUser())
-passport.deserializeUser(User.deserializeUser())
 
 app.get('/', (req, res) => {
 	res.render('home');
 });
-
-app.get('/seeds/user', async (req, res) => {
-	const user = new User({
-		email: 'aim@mail.com',
-		username: 'aim'
-	})
-	const newUser = await User.register(user, 'password')
-	res.send(newUser);
-})
 
 // places routes
 app.use('/', require('./routes/user'))

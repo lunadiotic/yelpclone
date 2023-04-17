@@ -11,11 +11,19 @@
           <a class="nav-link" href="/places/create">New Place</a>
         </div>
         <div class="navbar-nav">
+          <% if (!currentUser) { %>
           <a class="nav-link" href="/login">Login</a>
           <a class="nav-link" href="/register">Register</a>
-          <a class="nav-link" href="/logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
-          <form id="logout-form" action="/logout" method="POST" style="display: none;">
-          </form>
+          <% } else { %>
+            <a class="nav-link" 
+              href="/logout" 
+              onclick="
+                event.preventDefault(); 
+                document.getElementById('logout-form').submit();
+              ">Logout</a>
+            <form id="logout-form" action="/logout" method="POST" style="display: none;">
+            </form>
+          <% } %>
         </div>
       </div>
     </div>
