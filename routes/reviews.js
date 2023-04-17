@@ -1,30 +1,24 @@
 const express = require('express')
 const wrapAsync = require('../utils/wrapAsync');
-const ExpressError = require('../utils/ExpressError');
 const Place = require('../models/place');
 const Review = require('../models/review');
-const { reviewSchema } = require('../schemas/review');
 const isValidObjectId = require('../middlewares/isValidObjectId');
 const isAuth = require('../middlewares/isAuth');
+const validateReview = require('../middlewares/validateReview');
 const router = express.Router({ mergeParams: true });
-
-const validateReview = (req, res, next) => {
-    const { error } = reviewSchema.validate(req.body);
-    if (error) {
-        const msg = error.details.map(el => el.message).join(',')
-        return next(new ExpressError(msg, 400))
-    } else {
-        next();
-    }
-}
 
 router.post('/', isAuth, isValidObjectId('/places'), validateReview, wrapAsync(async (req, res) => {
     const { place_id } = req.params;
+
     const review = new Review(req.body.review);
+    review.author = req.user._id
+
     const place = await Place.findById(place_id);
     place.reviews.push(review);
+
     await review.save();
     await place.save();
+
     req.flash('success_msg', 'Review Created!');
     res.redirect(`/places/${place_id}`);
 }))
