@@ -9,7 +9,8 @@
               <p class="card-text"><%= place.description %></p>
             </div>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item"><%= place.location %></li>
+                <li class="list-group-item text-secondary"><%= place.location %></li>
+                <li class="list-group-item">Submitted by: <%= place.author.username %></li>
                 <li class="list-group-item"><%= place.price %></li>
             </ul>
             <div class="card-body">
