@@ -2,7 +2,7 @@
 
 <div class="row">
     <div class="col-6">
-        <div class="card">
+        <div class="card mb-5">
             <img src="<%= place.image %>" class="card-img-top" alt="<%= place.title %>">
             <div class="card-body">
               <h5 class="card-title"><%= place.title %></h5>
@@ -13,12 +13,14 @@
                 <li class="list-group-item">Submitted by: <%= place.author.username %></li>
                 <li class="list-group-item"><%= place.price %></li>
             </ul>
+            <% if(currentUser && place.author.equals(currentUser._id)) {%>
             <div class="card-body">
                 <a href="/places/<%= place._id %>/edit" class="card-link btn btn-warning text-white">Edit</a>
                 <form action="/places/<%= place._id %>?_method=DELETE" method="POST" style=" display:inline!important;">
                     <button type="submit" class="btn btn-danger">Delete</button>
                 </form>
             </div>
+            <% } %>
         </div>
     </div>
     <div class="col-6">
