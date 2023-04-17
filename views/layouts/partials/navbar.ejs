@@ -5,10 +5,17 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
+        <div class="navbar-nav me-auto mb-2 mb-lg-0">
           <a class="nav-link" href="/">Home</a>
           <a class="nav-link" href="/places">Places</a>
           <a class="nav-link" href="/places/create">New Place</a>
+        </div>
+        <div class="navbar-nav">
+          <a class="nav-link" href="/login">Login</a>
+          <a class="nav-link" href="/register">Register</a>
+          <a class="nav-link" href="/logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+          <form id="logout-form" action="/logout" method="POST" style="display: none;">
+          </form>
         </div>
       </div>
     </div>
