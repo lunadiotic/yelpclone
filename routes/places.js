@@ -45,9 +45,15 @@ router.get('/:id/edit', isAuth, isValidObjectId('/places'), wrapAsync(async (req
 }))
 
 router.put('/:id', isAuth, isValidObjectId('/places'), validatePlace, wrapAsync(async (req, res) => {
-    await Place.findByIdAndUpdate(req.params.id, { ...req.body.place });
+    const { id } = req.params;
+    let place = await Place.findById(id);
+    if (!place.author.equals(req.user._id)) {
+        req.flash('error_msg', 'Not Authorized!');
+        return res.redirect('/places');
+    }
+    place = await Place.findByIdAndUpdate(id, { ...req.body.place });
     req.flash('success_msg', 'Place Updated!');
-    res.redirect('/places');
+    res.redirect(`/places/${place._id}`);
 }))
 
 router.delete('/:id', isAuth, isValidObjectId('/places'), wrapAsync(async (req, res) => {
