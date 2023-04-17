@@ -1,21 +1,15 @@
 const express = require('express')
 const wrapAsync = require('../utils/wrapAsync');
 const Place = require('../models/place');
-const { placeSchema } = require('../schemas/place');
-const ExpressError = require('../utils/ExpressError');
 const isValidObjectId = require('../middlewares/isValidObjectId');
 const isAuth = require('../middlewares/isAuth');
+const validatePlace = require('../middlewares/validatePlace');
+const isAuthor = require('../middlewares/isAuthor');
 const router = express.Router();
 
-const validatePlace = (req, res, next) => {
-    const { error } = placeSchema.validate(req.body);
-    if (error) {
-        const msg = error.details.map(el => el.message).join(',')
-        return next(new ExpressError(msg, 400))
-    } else {
-        next();
-    }
-}
+
+
+
 
 router.get('/', wrapAsync(async (req, res) => {
     const places = await Place.find();
@@ -39,24 +33,19 @@ router.get('/:id', isValidObjectId('/places'), wrapAsync(async (req, res) => {
     res.render('places/show', { place });
 }))
 
-router.get('/:id/edit', isAuth, isValidObjectId('/places'), wrapAsync(async (req, res) => {
+router.get('/:id/edit', isAuth, isAuthor, isValidObjectId('/places'), wrapAsync(async (req, res) => {
     const place = await Place.findById(req.params.id);
     res.render('places/edit', { place });
 }))
 
-router.put('/:id', isAuth, isValidObjectId('/places'), validatePlace, wrapAsync(async (req, res) => {
+router.put('/:id', isAuth, isAuthor, isValidObjectId('/places'), validatePlace, wrapAsync(async (req, res) => {
     const { id } = req.params;
-    let place = await Place.findById(id);
-    if (!place.author.equals(req.user._id)) {
-        req.flash('error_msg', 'Not Authorized!');
-        return res.redirect('/places');
-    }
-    place = await Place.findByIdAndUpdate(id, { ...req.body.place });
+    const place = await Place.findByIdAndUpdate(id, { ...req.body.place });
     req.flash('success_msg', 'Place Updated!');
     res.redirect(`/places/${place._id}`);
 }))
 
-router.delete('/:id', isAuth, isValidObjectId('/places'), wrapAsync(async (req, res) => {
+router.delete('/:id', isAuth, isAuthor, isValidObjectId('/places'), wrapAsync(async (req, res) => {
     await Place.findByIdAndDelete(req.params.id);
     req.flash('success_msg', 'Place Deleted!');
     res.redirect('/places');
