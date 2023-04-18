@@ -10,12 +10,7 @@ const router = express.Router();
 
 router.route('/')
     .get(wrapAsync(PlaceController.index))
-    // .post(isAuth, validatePlace, wrapAsync(PlaceController.store))
-    .post(isAuth, upload.array('image', 5), async (req, res) => {
-        console.log('req.files', req.files);
-        console.log('req.body', req.body);
-        res.send('it work')
-    })
+    .post(isAuth, upload.array('image', 5), validatePlace, wrapAsync(PlaceController.store))
 
 router.get('/create', isAuth, PlaceController.create)
 
