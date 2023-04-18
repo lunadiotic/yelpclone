@@ -70,3 +70,41 @@ module.exports.destroy = async (req, res) => {
     req.flash('success_msg', 'Place Deleted!');
     res.redirect('/places');
 }
+
+module.exports.destroyImages = async (req, res) => {
+    try {
+        const { id } = req.params
+        const { images } = req.body
+
+        // Cek apakah model Place ditemukan berdasarkan ID-nya
+        const place = await Place.findById(id);
+        if (!place) {
+            req.flash('error_msg', 'Place not found');
+            return res.redirect(`/places/${id}/edit`);
+        }
+
+        if (!images || images.length === 0) {
+            req.flash('error_msg', 'Please select at least one image');
+            return res.redirect(`/places/${id}/edit`);
+        }
+
+        // Hapus file gambar dari sistem file
+        images.forEach(image => {
+            fs.unlinkSync(image);
+        });
+
+        // Hapus data gambar dari model Place
+        await Place.findByIdAndUpdate(
+            id,
+            { $pull: { images: { url: { $in: images } } } },
+            { new: true }
+        );
+
+        req.flash('success_msg', 'Successfully deleted images');
+        return res.redirect(`/places/${id}/edit`);
+    } catch (err) {
+        console.error(err);
+        req.flash('error_msg', 'Failed to delete images');
+        return res.redirect(`/places/${id}/edit`);
+    }
+}

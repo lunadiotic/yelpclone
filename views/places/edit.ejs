@@ -1,8 +1,8 @@
 <% layout('layouts/app') %>
 
-<div class="row">
+<div class="row mb-5">
     <h1 class="text-center">Update Place</h1>
-    <div class="col-6 offset-3">
+    <div class="col-6 <%= !place.images.length > 0 ? 'offset-3' : '' %>">
         <form action="/places/<%= place._id %>?_method=PUT" method="POST" class="validated-form" novalidate enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="title" class="form-label">Title</label>
@@ -57,4 +57,39 @@
             <button type="submit" class="btn btn-primary">Save</button>
         </form>
     </div>
+    <% if(place.images.length > 0) {%>
+        <div class="col-6">
+            <h5 class="text-center">Delete Images</h5>
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="checkAll">
+                <label class="form-check-label" for="checkAll">Check All</label>
+            </div>
+            <form action="/places/<%= place._id %>/images?_method=DELETE" method="post" class="d-flex flex-wrap">
+                <% place.images.forEach((image, index) =>  {%>
+                <div class="col-md-4">
+                    <div class="card mb-3">
+                        <img src="/images/<%= image.filename %>"  class="card-img-top">
+                        <div class="card-body">
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="images[]" value="<%= image.url %>">
+                                <span class="custom-checkbox-text">Pilih</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <% }) %>
+                <div class="w-100"></div>
+                <button class="btn btn-success flex-grow-0" type="submit">Delete</button>
+            </form>
+        </div>
+    <% } %>
 </div>
+
+<script>
+    document.getElementById('checkAll').addEventListener('change', function() {
+        const checkboxes = document.getElementsByName('images[]');
+        for (let i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].checked = this.checked;
+        }
+    });
+</script>
