@@ -3,7 +3,7 @@
 <div class="row">
     <h1 class="text-center">Update Place</h1>
     <div class="col-6 offset-3">
-        <form action="/places/<%= place._id %>?_method=PUT" method="POST" class="validated-form" novalidate>
+        <form action="/places/<%= place._id %>?_method=PUT" method="POST" class="validated-form" novalidate enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="title" class="form-label">Title</label>
                 <input type="text" name="place[title]" id="title" class="form-control" value="<%= place.title %>" required>
@@ -45,8 +45,8 @@
                 </div>
             </div>
             <div class="mb-3">
-                <label for="image" class="form-label">Image Url</label>
-                <input type="text" name="place[image]" id="image" class="form-control" value="<%= place.image %>" required>
+                <label for="image" class="form-label">Image</label>
+                <input type="file" name="image" id="image" accept="image/*" multiple>
                 <div class="valid-feedback">
                     Looks good!
                 </div>
