@@ -3,7 +3,7 @@
 <div class="row">
     <h1 class="text-center">Add Place</h1>
     <div class="col-6 offset-3">
-        <form action="/places" method="POST" novalidate class="validated-form">
+        <form action="/places" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="title" class="form-label">Title</label>
                 <input type="text" name="place[title]" id="title" class="form-control" required>
@@ -46,7 +46,7 @@
             </div>
             <div class="mb-3">
                 <label for="image" class="form-label">Image Url</label>
-                <input type="text" name="place[image]" id="image" class="form-control" required>
+                <input type="file" name="image" id="image" accept="image/*" multiple required>
                 <div class="valid-feedback">
                     Looks good!
                 </div>
