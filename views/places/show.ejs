@@ -5,11 +5,17 @@
     <div class="col-6">
         <div id="carouselImage" class="carousel slide">
             <div class="carousel-inner">
-                <% place.images.forEach((image, index) => { %>
+                <% if(place.images.length){ %>
+                    <% place.images.forEach((image, index) => { %>
+                        <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                            <img src="/images/<%= image.filename %>" class="d-block w-100">
+                        </div>
+                    <% })  %>
+                <% } else { %>
                     <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
-                        <img src="/images/<%= image.filename %>" class="d-block w-100">
+                        <img src="https://source.unsplash.com/collection/2349781/1280x720" class="d-block w-100">
                     </div>
-                <% })  %>
+                <% } %>
             </div>
             <% if(place.images.length > 1) { %>
             <button class="carousel-control-prev" type="button" data-bs-target="#carouselImage" data-bs-slide="prev">
