@@ -95,18 +95,21 @@
     </div>
 </div>
 
+<script>
+    const place = <%- JSON.stringify(place) %>
+</script>
 
 <script>
     const platform = new H.service.Platform({
         'apikey': 'cKKA1D0ftrVJs4QkN-6rCiVWIOiCgsvi3UEVAjhWqAs'
     });
-    const maptypes = platform.createDefaultLayers();
+    const defaultLayers = platform.createDefaultLayers();
     const map = new H.Map(
         document.getElementById('mapContainer'),
-        maptypes.vector.normal.map,
+        defaultLayers.vector.normal.map,
         {
-          zoom: 10,
-          center: { lng: 13.4, lat: 52.51 }
+          zoom: 15,
+          center: { lng: place.geometry.coordinates[0], lat: place.geometry.coordinates[1] }
         });
 
     const svgMarkup = `<svg width="50px" height="50px" viewBox="0 0 24 24" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/">
@@ -117,9 +120,12 @@
        </svg>`
 
     const icon = new H.map.Icon(svgMarkup),
-        coords = {lat: 52.53075, lng: 13.3851},
+        coords = { lng: place.geometry.coordinates[0], lat: place.geometry.coordinates[1] },
         marker = new H.map.Marker(coords, {icon: icon});
 
     map.addObject(marker);
     map.setCenter(coords);
+    
+    const ui = H.ui.UI.createDefault(map, defaultLayers, 'en-US');
+    const behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
 </script>
