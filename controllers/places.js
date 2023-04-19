@@ -1,5 +1,6 @@
 const Place = require("../models/place");
 const fs = require('fs');
+const hereMaps = require('../utils/hereMaps');
 
 module.exports.index = async (req, res) => {
     const places = await Place.find();
@@ -12,10 +13,15 @@ module.exports.create = (req, res) => {
 
 module.exports.store = async (req, res, next) => {
     const images = req.files.map(file => ({ url: file.path, filename: file.filename }));
+    const geoData = await hereMaps.geometry(req.body.place.location);
+
     const place = new Place(req.body.place);
     place.author = req.user._id
     place.images = images;
+    place.geometry = geoData
+
     await place.save();
+
     req.flash('success_msg', 'Place Created!');
     res.redirect('/places');
 }

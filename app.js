@@ -56,8 +56,6 @@ app.use((req, res, next) => {
 })
 
 app.get('/', async (req, res) => {
-	const result = await hereMaps.geocode('Taman Mini Indonesia Indah, Jakarta')
-	console.log(result)
 	res.render('home');
 });
 
