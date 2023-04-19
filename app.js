@@ -9,7 +9,8 @@ const path = require('path');
 const app = express();
 const passport = require('passport')
 const LocalStrategy = require('passport-local')
-const User = require('./models/user')
+const User = require('./models/user');
+const hereMaps = require('./utils/hereMaps');
 
 // connect to mongodb
 mongoose.connect('mongodb://127.0.0.1/yelp_clone')
@@ -54,7 +55,9 @@ app.use((req, res, next) => {
 	next();
 })
 
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
+	const result = await hereMaps.geocode('Taman Mini Indonesia Indah, Jakarta')
+	console.log(result)
 	res.render('home');
 });
 
