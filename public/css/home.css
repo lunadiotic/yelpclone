@@ -1,0 +1,73 @@
+.navbar {
+    background-color: transparent !important;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+}
+
+.navbar-brand {
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.navbar-nav {
+    justify-content: flex-end;
+}
+
+.nav-item {
+    margin-left: 10px;
+}
+
+.hero-section {
+    background-image: url('https://wallpapercave.com/wp/wp4069427.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px); /* Tambahkan backdrop-filter */
+}
+
+.hero-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Menambahkan warna gelap dan transparan */
+    z-index: -1;
+}
+
+.hero-section h1,
+.hero-section h4 {
+    color: #fff;
+    text-align: center;
+}
+
+.btn-outline-light {
+    color: #fff;
+    border-color: #fff;
+}
+
+.btn-group-center {
+    display: flex;
+    justify-content: center;
+}
+
+.btn-group-center .btn {
+    margin: 0 5px;
+}
+
+.navbar-nav .nav-link {
+    color: #fff;
+}
+
+.navbar-nav .nav-link:hover {
+    text-decoration: underline;
+    padding-bottom: 2px;
+}
